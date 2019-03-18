@@ -21,43 +21,37 @@ public class UserDao {
         return localInstance;
     }
 
-    public void createUser(UserEntity userEntity){
+    public void createUser(UserEntity userEntity) {
         String sqlreq = "INSERT INTO users (name,phone) VALUES (?,?)";
 
         Connection con = null;
         PreparedStatement stmt = null;
-        try{
+        try {
             con = DBConnection.getConnection();
             stmt = con.prepareStatement(sqlreq);
-            stmt.setString(1,userEntity.name);
-            stmt.setString(2,userEntity.phone);
+            stmt.setString(1, userEntity.name);
+            stmt.setString(2, userEntity.phone);
 
             stmt.executeQuery();
 
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
-        }finally{
+        } finally {
             closeConnection(con);
             closePreparedStatement(stmt);
         }
     }
 
 
-    private void closeConnection(Connection con){
+    private void closeConnection(Connection con) {
         try {
             con.close();
         } catch (SQLException e) {
             System.out.println(e);
         }
     }
-    private void closePreparedStatement(PreparedStatement stmt){
-        try {
-            stmt.close();
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-    }
-    private void closeCallableStatement(CallableStatement stmt){
+
+    private void closePreparedStatement(PreparedStatement stmt) {
         try {
             stmt.close();
         } catch (SQLException e) {
@@ -71,16 +65,48 @@ public class UserDao {
         PreparedStatement stmt = con.prepareStatement(sqlreq);
 
 
-       for (int i=0;i<ammountOfRows;i++){
-           UserEntity userEntity = FakeData.generateFakeUser();
-           stmt.setString(1,userEntity.name);
-           stmt.setString(2,userEntity.phone);
+        for (int i = 0; i < ammountOfRows; i++) {
+            UserEntity userEntity = FakeData.generateFakeUser();
+            stmt.setString(1, userEntity.name);
+            stmt.setString(2, userEntity.phone);
 
-           stmt.executeUpdate();
-       }
+            stmt.executeUpdate();
+        }
+
+        closeConnection(con);
+        closePreparedStatement(stmt);
+    }
+
+
+    public void fillTableOptimaze(int ammountOfRows) throws SQLException {
+        Connection con = DBConnection.getConnection();
+        con.setAutoCommit(false);
+        String sqlreq = "INSERT INTO users (name,phone) VALUES (?,?)";
+        PreparedStatement stmt = con.prepareStatement(sqlreq);
+        int batchAmmount = 0 ;
+
+
+        for (int i=0;i<ammountOfRows;i++){
+
+            UserEntity userEntity = FakeData.generateFakeUser();
+            stmt.setString(1,userEntity.name);
+            stmt.setString(2,userEntity.phone);
+            stmt.addBatch();
+
+            batchAmmount++;
+            if(batchAmmount==1000){
+                batchAmmount=0;
+                stmt.executeBatch();
+            }
+
+        }
+
+        stmt.executeBatch();
+        con.commit();
 
         closeConnection(con);
         closePreparedStatement(stmt);
 
     }
+
 }
