@@ -6,8 +6,17 @@ import user.UserEntity;
 public class Main {
 
     public static void main(String[] args) {
-        UserEntity userEntity = FakeData.generateFakeUser();
         UserDao userDao = UserDao.getInstance();
-        userDao.createUser(userEntity);
+        long startTime, endTime, totalTime;
+
+        startTime = System.currentTimeMillis();
+        for (int i = 0; i < 50000; i++) {
+            UserEntity userEntity = FakeData.generateFakeUser();
+            userDao.createUser(userEntity);
+        }
+        endTime = System.currentTimeMillis();
+        totalTime=endTime-startTime;
+
+        System.out.println(totalTime);
     }
 }

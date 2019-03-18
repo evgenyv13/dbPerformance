@@ -19,24 +19,18 @@ public class UserDao {
         return localInstance;
     }
 
-    public int createUser(UserEntity userEntity){
+    public void createUser(UserEntity userEntity){
         String sqlreq = "INSERT INTO users (name,phone) VALUES (?,?)";
 
         Connection con = null;
         PreparedStatement stmt = null;
-        int id=-1;
         try{
             con = DBConnection.getConnection();
-            stmt = con.prepareStatement(sqlreq, Statement.RETURN_GENERATED_KEYS);
+            stmt = con.prepareStatement(sqlreq);
             stmt.setString(1,userEntity.name);
             stmt.setString(2,userEntity.phone);
 
-            stmt.executeUpdate();
-            ResultSet rs = stmt.getGeneratedKeys();
-
-            if (rs.next()) {
-                id = rs.getInt(1);
-            }
+            stmt.executeQuery();
 
         }catch(Exception e){
             System.out.println(e);
@@ -44,9 +38,8 @@ public class UserDao {
             closeConnection(con);
             closePreparedStatement(stmt);
         }
-
-        return id;
     }
+
 
     private void closeConnection(Connection con){
         try {
