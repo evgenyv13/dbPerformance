@@ -2,6 +2,8 @@ import faker.FakeData;
 import user.UserDao;
 import user.UserEntity;
 
+import java.sql.SQLException;
+
 
 public class Main {
 
@@ -10,13 +12,14 @@ public class Main {
         long startTime, endTime, totalTime;
 
         startTime = System.currentTimeMillis();
-        for (int i = 0; i < 50000; i++) {
-            UserEntity userEntity = FakeData.generateFakeUser();
-            userDao.createUser(userEntity);
+        try {
+            userDao.fillTable(100000);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         endTime = System.currentTimeMillis();
         totalTime=endTime-startTime;
 
-        System.out.println(totalTime);
+        System.out.println("total time = "+totalTime);
     }
 }

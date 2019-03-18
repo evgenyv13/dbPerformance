@@ -1,5 +1,7 @@
 package user;
 
+import faker.FakeData;
+
 import java.sql.*;
 import java.util.List;
 
@@ -61,5 +63,24 @@ public class UserDao {
         } catch (SQLException e) {
             System.out.println(e);
         }
+    }
+
+    public void fillTable(int ammountOfRows) throws SQLException {
+        Connection con = DBConnection.getConnection();
+        String sqlreq = "INSERT INTO users (name,phone) VALUES (?,?)";
+        PreparedStatement stmt = con.prepareStatement(sqlreq);
+
+
+       for (int i=0;i<ammountOfRows;i++){
+           UserEntity userEntity = FakeData.generateFakeUser();
+           stmt.setString(1,userEntity.name);
+           stmt.setString(2,userEntity.phone);
+
+           stmt.executeUpdate();
+       }
+
+        closeConnection(con);
+        closePreparedStatement(stmt);
+
     }
 }
