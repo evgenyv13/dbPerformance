@@ -10,8 +10,8 @@ public class Main {
     public static void main(String[] args) {
         UserDao userDao = UserDao.getInstance();
         long startTime, endTime, totalTime;
-        /* not optimize data */
-        startTime = System.currentTimeMillis();
+        /*-----------------------------------------------------------------*/
+/*        startTime = System.currentTimeMillis();
         try {
             userDao.fillTable(1000000);
         } catch (SQLException e) {
@@ -20,20 +20,32 @@ public class Main {
         endTime = System.currentTimeMillis();
         totalTime=endTime-startTime;
 
-        System.out.println("total time fillTable = "+totalTime);
+        System.out.println("total time fillTable = "+totalTime);*/
 
-        /* optimize data */
+        /*-----------------------------------------------------------------*/
+
         startTime = System.currentTimeMillis();
         try {
-            userDao.fillTableOptimaze(1000000);
+            userDao.fillTableOptimazeBatch(1000000);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         endTime = System.currentTimeMillis();
         totalTime=endTime-startTime;
-        /*  results */
-
 
         System.out.println("total time fillTableOptimaze = "+totalTime);
+
+        /*-----------------------------------------------------------------*/
+
+/*        startTime = System.currentTimeMillis();
+        try {
+            userDao.fillTableOptimazeCommits(1000000);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        endTime = System.currentTimeMillis();
+        totalTime=endTime-startTime;
+
+        System.out.println("total time fillTableOptimazeCommits = " + totalTime);*/
     }
 }

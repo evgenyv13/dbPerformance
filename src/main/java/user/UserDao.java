@@ -78,7 +78,7 @@ public class UserDao {
     }
 
 
-    public void fillTableOptimaze(int ammountOfRows) throws SQLException {
+    public void fillTableOptimazeBatch(int ammountOfRows) throws SQLException {
         Connection con = DBConnection.getConnection();
         con.setAutoCommit(false);
         String sqlreq = "INSERT INTO users (name,phone) VALUES (?,?)";
@@ -104,6 +104,34 @@ public class UserDao {
         stmt.executeBatch();
         con.commit();
 
+        closeConnection(con);
+        closePreparedStatement(stmt);
+
+    }
+
+
+    public void fillTableOptimazeCommits(int ammountOfRows) throws SQLException {
+        Connection con = DBConnection.getConnection();
+        con.setAutoCommit(false);
+        String sqlreq = "INSERT INTO users (name,phone) VALUES (?,?)";
+        PreparedStatement stmt = con.prepareStatement(sqlreq);
+        int commitAmmount = 0 ;
+
+
+        for (int i = 0; i < ammountOfRows; i++) {
+            UserEntity userEntity = FakeData.generateFakeUser();
+            stmt.setString(1, userEntity.name);
+            stmt.setString(2, userEntity.phone);
+            stmt.executeUpdate();
+
+            commitAmmount++;
+            if(commitAmmount==5000){
+                commitAmmount=0;
+                con.commit();
+            }
+        }
+
+        con.commit();
         closeConnection(con);
         closePreparedStatement(stmt);
 
