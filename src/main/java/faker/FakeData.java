@@ -7,6 +7,6 @@ public class FakeData {
     private static Faker faker = new Faker();
 
     public static UserEntity generateFakeUser(){
-        return new UserEntity(faker.firstName(),faker.phoneNumber());
+        return new UserEntity(faker.firstName() + " " + faker.lastName(),faker.phoneNumber());
     }
 }

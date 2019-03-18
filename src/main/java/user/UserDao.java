@@ -21,7 +21,6 @@ public class UserDao {
 
     public int createUser(UserEntity userEntity){
         String sqlreq = "INSERT INTO users (name,phone) VALUES (?,?)";
-        String generatedColumns[] = { "contact_id" };
 
         Connection con = null;
         PreparedStatement stmt = null;
