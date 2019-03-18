@@ -20,7 +20,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="dbPerformance" target="1.5" />
+      <module name="dbPerformance" target="7" />
     </bytecodeTargetLevel>
   </component>
 </project>
