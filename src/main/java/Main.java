@@ -24,9 +24,24 @@ public class Main {
 
         /*-----------------------------------------------------------------*/
 
+/*        startTime = System.currentTimeMillis();
+        try {
+            userDao.fillTableOptimazeBatch(20000000);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        endTime = System.currentTimeMillis();
+        totalTime=endTime-startTime;
+
+        System.out.println("total time fillTableOptimaze = "+totalTime);*/
+
+        /*-----------------------------------------------------------------*/
+
+        /*-----------------------------------------------------------------*/
+
         startTime = System.currentTimeMillis();
         try {
-            userDao.fillTableOptimazeBatch(1000000);
+            userDao.fillTableOptimazeBatchWithCommits(2000000);
         } catch (SQLException e) {
             e.printStackTrace();
         }

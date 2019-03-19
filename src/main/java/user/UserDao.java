@@ -94,10 +94,11 @@ public class UserDao {
             stmt.addBatch();
 
             batchAmmount++;
-            if(batchAmmount==1000){
+            if(batchAmmount==2500){
                 batchAmmount=0;
                 stmt.executeBatch();
             }
+            if(i%100000==0) System.out.println("inserted " + i + " rows");
 
         }
 
@@ -137,4 +138,37 @@ public class UserDao {
 
     }
 
+    public void fillTableOptimazeBatchWithCommits(int ammountOfRows) throws SQLException {
+        Connection con = DBConnection.getConnection();
+        con.setAutoCommit(false);
+        String sqlreq = "INSERT INTO users (name,phone) VALUES (?,?)";
+        PreparedStatement stmt = con.prepareStatement(sqlreq);
+        int batchAmmount = 0;
+
+
+        for (int i = 0; i < ammountOfRows; i++) {
+
+            UserEntity userEntity = FakeData.generateFakeUser();
+            stmt.setString(1, userEntity.name);
+            stmt.setString(2, userEntity.phone);
+            stmt.addBatch();
+
+            batchAmmount++;
+            if (batchAmmount == 1000) {
+                batchAmmount = 0;
+                stmt.executeBatch();
+            }
+            if (i % 100000 == 0) {
+                con.commit();
+                System.out.println("inserted " + i + " rows");
+            }
+
+        }
+
+        stmt.executeBatch();
+        con.commit();
+
+        closeConnection(con);
+        closePreparedStatement(stmt);
+    }
 }
